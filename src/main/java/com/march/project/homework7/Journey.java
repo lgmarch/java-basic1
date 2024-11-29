@@ -4,7 +4,6 @@ import com.march.project.homework7.area.Area;
 import com.march.project.homework7.area.Forest;
 import com.march.project.homework7.area.Plain;
 import com.march.project.homework7.area.Swamp;
-import com.march.project.homework7.interrupts.NullPointerExceptionOfTransport;
 import com.march.project.homework7.people.Human;
 import com.march.project.homework7.transport.AllTerrainVehicle;
 import com.march.project.homework7.transport.Bicycle;
@@ -12,7 +11,7 @@ import com.march.project.homework7.transport.Car;
 import com.march.project.homework7.transport.Horse;
 
 public class Journey {
-    public static void main(String[] args) throws NullPointerExceptionOfTransport {
+    public static void main(String[] args) {
         Human human = new Human("Boris");
         System.out.println(human);
 

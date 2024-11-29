@@ -1,11 +1,13 @@
 package com.march.project.homework7.people;
 
 import com.march.project.homework7.area.Area;
+import com.march.project.homework7.interrupts.NullPointerExceptionOfAria;
+import com.march.project.homework7.interrupts.NullPointerExceptionOfTransport;
 import com.march.project.homework7.transport.Transport;
 
 public class Human {
     private final String name;
-    private int endurance;
+    private int endurance;      // выносливость
     private Transport currentTransport;
 
     public Human(String name) {
@@ -14,24 +16,43 @@ public class Human {
         this.currentTransport = null;   // изначально у человека нет транспорта
     }
 
-    // получить в транспорт
+    // сесть в транспорт
     public void getOnTransport(Transport newTransport) {
+        if (currentTransport != null) {
+            System.out.println("Чтобы сесть в другой транспорт, вначале необходимо выйти из текущего.");
+        }
         if (newTransport == null) {
-            throw new IllegalStateException("The transport has not been set yet.");
+            System.out.println("Поездка невозможна. Отсутствует средство передвижения.");
+            return;
         }
         currentTransport = newTransport;
         System.out.println(name + " получил " + currentTransport);
     }
 
-    // выйти из транспорта
-    public void exitTransport() {
-        System.out.println("Human: " + name + ", отдал машину: " + currentTransport);
-        currentTransport = null;
+    private void refuelTransport(float petrol) throws NullPointerExceptionOfTransport {
+        if (currentTransport == null) {
+            throw new NullPointerExceptionOfTransport("Заправка невозможна. Отсутствует средство передвижения.");
+        }
+        currentTransport.refuel(petrol);
     }
 
-    public boolean run(Area area, int distance) {
-        System.out.println("Поехали!");
-        return currentTransport.run(area, distance);
+    // поехали
+    public void drive(Area area, int distance, float petrol) {
+        try {
+            refuelTransport(petrol);                // заправляем машину
+            currentTransport.run(area, distance);   // поехали!
+        } catch (NullPointerExceptionOfTransport | NullPointerExceptionOfAria ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    // выйти из транспорта
+    public void exitTransport() {
+        if (currentTransport == null) {
+            return;
+        }
+        System.out.println("Путешественник: " + name + ", отдал средство передвижения: " + currentTransport);
+        currentTransport = null;
     }
 
     public int getEndurance() {
@@ -42,15 +63,8 @@ public class Human {
         this.endurance = endurance;
     }
 
-    public Transport getCurrentTransport() {
-        if (currentTransport == null) {
-            throw new IllegalStateException("The transport has not been set yet.");
-        }
-        return currentTransport;
-    }
-
     @Override
     public String toString() {
-        return "Human: " + name + ", currentTransport: " + (currentTransport == null ? "отсутствует" : currentTransport);
+        return "Путешественник: " + name + ", выносливость: " + endurance + ", транспорт: " + (currentTransport == null ? "отсутствует" : currentTransport);
     }
 }

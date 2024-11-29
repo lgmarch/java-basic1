@@ -1,10 +1,10 @@
 package com.march.project.homework7.transport;
 
 import com.march.project.homework7.area.Area;
+import com.march.project.homework7.interrupts.NullPointerExceptionOfAria;
 
 public class AllTerrainVehicle extends Transport {
-    private float petrol;
-    private final float gasConsumption;   // потребеление бензина на 1км
+    private final float gasConsumption;   // расход бензина на 1км
 
     public AllTerrainVehicle(String name) {
         super(name);
@@ -12,41 +12,34 @@ public class AllTerrainVehicle extends Transport {
     }
 
     @Override
-    boolean isCanGo(Area area) {
-        return false;
-    }
-
-    public float getPetrol() {
-        return petrol;
-    }
-
-    @Override
-    public void refuelTransport(float petrol) {
-        this.petrol = petrol;
-    }
-
-    @Override
-    public boolean run(Area area, int distance) {
+    public void run(Area area, int distance)throws NullPointerExceptionOfAria {
         if (area == null) {
-            System.out.println("Вы не выбрали куда ехать!");
-            return false;
+            throw new NullPointerExceptionOfAria("Вы не выбрали куда ехать!");
+        }
+
+        if (isNotCanGo(area)){
+            return;
         }
 
         float spentGas = Math.abs(distance) * gasConsumption; // расчет расхода бензина на поездку
         if (spentGas > petrol) {
             System.out.println("Не достаточно горючки!");
-            return false;
+            return;
         }
-
+        System.out.println("Поехали!");
         petrol -= spentGas;
         System.out.println("->->->->");
         System.out.println("Приехали!");
-        return true;
+    }
+
+    @Override
+    public boolean isNotCanGo(Area area) {
+        return false;
     }
 
     @Override
     public String toString() {
-        return "Vehicle: " + name +
-                ", fuel: " + petrol;
+        return "вездеход: " + name +
+                ", горючки: " + petrol;
     }
 }

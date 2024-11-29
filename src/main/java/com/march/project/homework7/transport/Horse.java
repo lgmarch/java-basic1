@@ -2,10 +2,10 @@ package com.march.project.homework7.transport;
 
 import com.march.project.homework7.area.Area;
 import com.march.project.homework7.area.Swamp;
+import com.march.project.homework7.interrupts.NullPointerExceptionOfAria;
 
 public class Horse extends Transport {
-    private float power;                    // сколько километров может пройти
-    private final float hayConsumption;           // потребление сена
+    private final float hayConsumption;     // потребление сена на 1 км
 
     public Horse(String name) {
         super(name);
@@ -13,7 +13,27 @@ public class Horse extends Transport {
     }
 
     @Override
-    boolean isCanGo(Area area) {
+    public void run(Area area, int distance) throws NullPointerExceptionOfAria {
+        if (area == null) {
+            throw new NullPointerExceptionOfAria("Вы не выбрали куда ехать!");
+        }
+        if (isNotCanGo(area)){
+            return;
+        }
+
+        float spentPower = Math.abs(distance) * hayConsumption; // расчет расхода сил на поездку
+        if (spentPower > petrol) {
+            System.out.println("У лошади не достаточно сил для поездки!");
+            return;
+        }
+        System.out.println("Поехали!");
+        petrol -= spentPower;
+        System.out.println("... ... ... ...");
+        System.out.println("Приехали!");
+    }
+
+    @Override
+    public boolean isNotCanGo(Area area) {
         if (area instanceof Swamp) {
             System.out.println("Лошадь не может двигаться по " + area);
             return true;
@@ -22,35 +42,8 @@ public class Horse extends Transport {
     }
 
     @Override
-    public boolean run(Area area, int distance) {
-        if (area == null) {
-            System.out.println("Вы не выбрали куда ехать!");
-            return false;
-        }
-
-        if (isCanGo(area)){
-            return false;
-        }
-
-        float spentGas = Math.abs(distance) * hayConsumption; // расчет расхода сил на поездку
-        if (spentGas > power) {
-            System.out.println("Не достаточно сил у лошади! Ее надо покормить!");
-            return false;
-        }
-        power -= spentGas;
-        System.out.println("... ... ... ...");
-        System.out.println("Приехали!");
-        return true;
-    }
-
-    @Override
-    public void refuelTransport(float hay) {
-        this.power = hay * hayConsumption;
-    }
-
-    @Override
     public String toString() {
-        return "Horse: " + name +
-                ", power: " + power;
+        return "лошадь: " + name +
+                ", сил у лошади: " + petrol;
     }
 }

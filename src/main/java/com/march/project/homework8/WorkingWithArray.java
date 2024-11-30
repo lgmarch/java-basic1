@@ -5,7 +5,7 @@ import com.march.project.homework8.errors.AppArraySizeException;
 
 public class WorkingWithArray {
     public static void main(String[] args) {
-        String[][] matrix = { {"1", "1", "1", "е"}, {"1", "1", "1", "1"}, {"1", "1", "1", "1"}, {"1", "1", "1", "1"} };
+        String[][] matrix = { {"1", "1", "1", "1"}, {"1", "1", "1"}, {"1", "1", "1", "1"}, {"1", "1", "1", "1"} };
 
         try {
             int result = checkingArrayForDimension(matrix);
@@ -13,17 +13,18 @@ public class WorkingWithArray {
         } catch (AppArraySizeException ex) {
             System.out.println(ex.getMessage());
         } catch (AppArrayDataException ex) {
-            System.out.println(ex.getMessage() + ex.getLine() + ex.getColumn());
+            System.out.printf("%s at row %d, column %d%n", ex.getMessage(), ex.getLine(), ex.getColumn());
         }
     }
 
     public static int checkingArrayForDimension(String[][] arr) throws AppArraySizeException, AppArrayDataException {
         int sum = 0;
 
+        if (arr.length != 4) {
+            throw new AppArraySizeException("The array must have a size of 4x4");
+        }
+
         for (int i = 0; i < arr.length; i++) {
-            if (arr.length != 4) {
-                throw new AppArraySizeException("The array must have a size of 4x4");
-            }
             for (int j = 0; j < arr[i].length; j++) {
                 if (arr[i].length != 4) {
                     throw new AppArraySizeException("The array must have a size of 4x4");
@@ -31,7 +32,7 @@ public class WorkingWithArray {
                 try {
                     sum += Integer.parseInt(arr[i][j]);
                 } catch (NumberFormatException ex) {
-                    throw new AppArrayDataException("Невозможно преобразовать строку в число. Строка и столбец: ", i, j);
+                    throw new AppArrayDataException("Невозможно преобразовать строку в число: ", i, j);
                 }
             }
         }

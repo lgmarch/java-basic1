@@ -14,6 +14,7 @@ public class GreetClient {
     public void startConnection(String ip, int port) {
         try {
             clientSocket = new Socket(ip, port);
+
             out = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         } catch (IOException e) {
@@ -22,14 +23,12 @@ public class GreetClient {
     }
 
     public String sendMessage(String msg) {
-        String resp = null;
         try {
             out.println(msg);
-            resp = in.readLine();
+            return in.readLine();
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            return null;
         }
-        return resp;
     }
 
     public void stopConnection() {

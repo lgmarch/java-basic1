@@ -6,9 +6,8 @@ public class DoubleArray {
     }
 
     public static void fillingArrayPart(double[] array, int from, int to) {
-        for (int i = from; i < to; i++) {
-            //array[i] = 1.14 * Math.cos(i) * Math.sin(i * 0.2) * Math.cos(i / 1.2);
-            array[i] = i;
+        for (int i = from; i <= to; i++) {
+            array[i] = 1.14 * Math.cos(i) * Math.sin(i * 0.2) * Math.cos(i / 1.2);
         }
         System.out.println("Поток заполнил ячейки с " + from + " по " + to);
     }
@@ -23,7 +22,7 @@ public class DoubleArray {
         int remainder = array.length % numberOfParts;
 
         int start = 0;
-        //Thread[] threads = new Thread[numberOfParts];
+        Thread[] threads = new Thread[numberOfParts];
 
         for (int i = 0; i < numberOfParts; i++) {
             int end = start + partSize - 1;
@@ -37,13 +36,12 @@ public class DoubleArray {
             final int from = start;
             final int to = end;
 
-            //threads[i] = new Thread(() -> fillingArrayPart(array, from, to));
-            //threads[i].start();
-            fillingArrayPart(array, from, to);
+            threads[i] = new Thread(() -> fillingArrayPart(array, from, to));
+            threads[i].start();
 
             start = end + 1;
         }
-/*
+
         // Ждем завершения всех потоков
         for (Thread thread : threads) {
             try {
@@ -52,8 +50,6 @@ public class DoubleArray {
                 e.printStackTrace();
             }
         }
-
- */
     }
 
     public static void printArray(double[] arr) {
@@ -61,5 +57,6 @@ public class DoubleArray {
         for (double v : arr) {
             System.out.print(v + " ");
         }
+        System.out.println();
     }
 }
